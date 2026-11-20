@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23FCEE0A'/%3E%3Ctext x='32' y='44' font-size='36' font-weight='bold' text-anchor='middle' fill='%23000'%3EX%3C/text%3E%3C/svg%3E">
+<title>Gato Numérico — Métodos Numéricos</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="fondo-flotante" id="fondo-flotante" aria-hidden="true"></div>
+<div class="scan-sweep" aria-hidden="true"></div>
+<header>
+  <div class="hazard" aria-hidden="true"></div>
+  <h1 data-text="GATO NUMÉRICO">GATO <span class="t2">NUMÉRICO</span></h1>
+  <p>FIME // MÉTODOS NUMÉRICOS</p>
+</header>
+<main>
+
+<!-- ============ INICIO ============ -->
+<section id="pantalla-inicio" class="screen activo">
+  <div class="home-layout">
+    <div class="card home-main">
+      <h2>Resuelve un método. Gana tu casilla.</h2>
+      <p class="sub">Acierta el reto y colocas tu ficha. La computadora bloquea y busca ganar.</p>
+      <div class="stats">
+        <div class="stat"><b id="stat-acreditados">0</b><span>métodos acreditados de 29</span></div>
+        <div class="stat"><b id="stat-victorias">0</b><span>victorias</span></div>
+        <div class="stat"><b id="stat-racha">0</b><span>racha actual</span></div>
+      </div>
+      <div class="niveles" id="niveles">
+        <div class="nivel sel" data-nivel="0">Inicial<small id="min-0">25 min</small></div>
+        <div class="nivel" data-nivel="1">Intermedio<small id="min-1">30 min</small></div>
+        <div class="nivel" data-nivel="2">Avanzado<small id="min-2">60 min</small></div>
+      </div>
+      <p class="sub" id="nota-dificultad" style="text-align:center; margin:2px 0 4px;"><b>Fácil:</b> 1 parte · <b>Medio:</b> 2 partes · <b>Difícil:</b> todo el problema.</p>
+      <p class="sub" style="text-align:center; margin:0 0 4px; color:#FF5C7A;"><b>Cada error te quita tiempo:</b> Fácil −2 min · Medio −3 min · Difícil −4 min.</p>
+      <p class="sub" style="text-align:center; margin:0 0 4px;">Cada reto pide comprobación a mano y resultado: todo debe estar bien. En Difícil son dos comprobaciones.</p>
+      <button class="btn primario" id="btn-jugar">Jugar partida</button>
+      <button class="btn secundario" id="btn-demo">Ver demo</button>
+      <div class="btn-row">
+        <button class="btn" id="btn-recompensas">Recompensas</button>
+        <button class="btn secundario" id="btn-tiempos">Ajustar tiempos</button>
+      </div>
+      <button class="btn secundario" id="btn-metodos">Métodos</button>
+      <button class="btn secundario" id="btn-records">Mis récords</button>
+      <button class="btn discreto" id="btn-reiniciar">Reiniciar progreso</button>
+    </div>
+    <div class="home-side">
+      <div class="card mini-card">
+        <h3>Así se juega</h3>
+        <div class="mini-tablero-wrap">
+          <div class="mini-grid" id="mini-grid"></div>
+        </div>
+        <p class="sub center" style="margin:8px 0 0;">La X y la O juegan solas, de muestra.</p>
+      </div>
+      <div class="card skins-card">
+        <h3>Skins</h3>
+        <div class="home-skins" id="home-skins"></div>
+        <p class="sub center" style="margin:10px 0 0;">Gana partidas y acredita métodos para desbloquearlas.</p>
+      </div>
+    </div>
+  </div>
+  <p class="pie">Tolerancia ±0.001 · Decimales con punto o coma<br>
+  Gato Numérico · Equipo 3 · Métodos Numéricos</p>
+</section>
+
+<!-- ============ RECOMPENSAS ============ -->
+<section id="pantalla-recompensas" class="screen">
+  <h2>Colección de recompensas</h2>
+  <p class="sub">Elige un aspecto para el tablero. Se desbloquea cumpliendo su regla.</p>
+  <div id="lista-skins"></div>
+  <h3>Métodos acreditados por categoría</h3>
+  <div id="progreso-categorias"></div>
+  <button class="btn primario" id="btn-volver-inicio">Volver al inicio</button>
+</section>
+
+<!-- ============ MÉTODOS ============ -->
+<section id="pantalla-metodos" class="screen">
+  <h2>Métodos</h2>
+  <p class="sub">Los 29 métodos del juego, por categoría, con su nombre y su sección. Despliega una categoría para ver sus métodos y si ya están acreditados.</p>
+  <div id="lista-metodos"></div>
+  <button class="btn primario" id="btn-volver-inicio-3">Volver al inicio</button>
+</section>
+
+<!-- ============ MIS RÉCORDS ============ -->
+<section id="pantalla-records" class="screen">
+  <h2>Mis récords</h2>
+  <p class="sub">Tus números en el campeonato. Se actualizan solos al terminar cada partida.</p>
+  <div id="lista-records"></div>
+  <button class="btn primario" id="btn-volver-inicio-4">Volver al inicio</button>
+</section>
+
+<!-- ============ AJUSTAR TIEMPOS ============ -->
+<section id="pantalla-tiempos" class="screen">
+  <h2>Tiempos por nivel</h2>
+  <p class="sub">Minutos enteros de 1 a 120, en orden ascendente (Inicial &lt; Intermedio &lt; Avanzado). Por defecto: 25, 30 y 60.</p>
+  <div class="card tiempos">
+    <label>Inicial · minutos · cada error −2 min</label><input type="number" id="t0" min="1" max="120" inputmode="numeric">
+    <label>Intermedio · minutos · cada error −3 min</label><input type="number" id="t1" min="1" max="120" inputmode="numeric">
+    <label>Avanzado · minutos · cada error −4 min</label><input type="number" id="t2" min="1" max="120" inputmode="numeric">
+    <p class="error" id="error-tiempos"></p>
+    <button class="btn primario" id="btn-guardar-tiempos">Guardar</button>
+    <button class="btn secundario" id="btn-cancelar-tiempos">Cancelar</button>
+  </div>
+</section>
+
+<!-- ============ JUEGO: TABLERO + RETO LADO A LADO ============ -->
+<section id="pantalla-tablero" class="screen">
+  <div class="juego-layout">
+    <div class="tablero-wrap">
+      <div class="sub" id="nivel-tablero" style="letter-spacing:2px; font-family:var(--pix); color:var(--cian); font-weight:bold;">INICIAL / CAMPEONATO</div>
+      <div class="reloj" id="reloj">25:00</div>
+      <div class="penal-aviso" id="penal-aviso" aria-live="polite"></div>
+      <div class="msg" id="mensaje-tablero">Resuelve el reto de apertura.</div>
+      <p class="demo-estado" id="demo-estado" style="display:none;"></p>
+      <p class="demo-nota" id="demo-nota" style="display:none;">Demostración: la computadora sigue una secuencia fija.</p>
+      <div class="ronda-info"><span id="ronda-txt">CASILLAS 0/9</span><span id="racha-chip">RACHA 0</span></div>
+      <div class="pips" id="pips" aria-hidden="true"><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></div>
+      <div class="grid" id="grid"></div>
+      <div class="fichas" id="fichas">Tu ficha X · Computadora O</div>
+      <button class="btn discreto" id="btn-abandonar" style="margin-top:10px;">Abandonar partida</button>
+    </div>
+
+    <div class="panel-reto sin-reto" id="modal-reto">
+      <div class="hazard" aria-hidden="true"></div>
+      <div id="reto-espera">
+        <div class="espera-marcas" aria-hidden="true"><span class="ex">X</span><span class="oh">O</span></div>
+        <p id="reto-espera-txt">Toca una casilla libre para abrir su reto.</p>
+      </div>
+      <div id="reto-contenido">
+        <div class="reto-cab">
+          <span id="reto-titulo">RETO DE APERTURA</span>
+          <span class="reloj reloj-panel" id="reloj-modal">25:00</span>
+        </div>
+        <h2 id="reto-metodo">Newton-Raphson</h2>
+        <div class="badge-wrap"><span class="dificultad-badge" id="reto-dificultad"></span></div>
+        <div class="problema" id="reto-problema"></div>
+        <div id="reto-campos"></div>
+        <p class="error" id="reto-error"></p>
+        <p class="nota">Tolerancia: ±0.001. Decimales con punto o coma.</p>
+        <div class="reto-acciones">
+          <button class="btn primario" id="btn-validar">Validar respuesta</button>
+          <button class="btn pequeno" id="btn-ceder">Ceder turno</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FIN DE PARTIDA ============ -->
+<section id="pantalla-fin" class="screen">
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+  <div class="resultado" id="resultado-titulo">Victoria</div>
+  <div class="card" style="text-align:center;">
+    <div id="tablero-final"></div>
+    <div id="fin-resumen"></div>
+  </div>
+  <h2>Tu partida, reto por reto</h2>
+  <div id="lista-revision"></div>
+  <div class="btn-row">
+    <button class="btn primario" id="btn-otra-vez">Jugar otra vez</button>
+    <button class="btn" id="btn-copiar-reporte">Copiar reporte</button>
+  </div>
+  <button class="btn" id="btn-volver-inicio-2">Volver al inicio</button>
+</section>
+
+</main>
+
+<!-- ============ MODAL ELEGIR FICHA ============ -->
+<div class="modal-fondo" id="modal-ficha">
+  <div class="modal" style="text-align:center;">
+    <h2>¿Con cuál quieres iniciar?</h2>
+    <p style="font-size:14px; color:var(--gris); margin:8px 0 14px;">Acertaste el reto de apertura. Elige tu ficha y coloca la primera.</p>
+    <button class="btn primario" data-ficha="X" style="font-size:26px;">X</button>
+    <button class="btn primario" data-ficha="O" style="font-size:26px;">O</button>
+  </div>
+</div>
+
+<!-- ============ ADAM SMASHER: RESPUESTA INCORRECTA ============ -->
+<div class="smasher-overlay" id="smasher-overlay" aria-hidden="true">
+  <div class="smasher-card">
+    <img class="smasher-img" src="{{ url_for('static', filename='img/adam-smasher.png') }}" alt="Adam Smasher en pixel art">
+    <div class="smasher-lado">
+      <div class="smasher-bubble">¡LLEGÓ LA HORA,<br>CUCHI CUCHI!</div>
+      <div class="smasher-sub">RESPUESTA INCORRECTA</div>
+      <div class="smasher-penal" id="smasher-penal">−4 MIN</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<button class="btn peligro" id="btn-salir-demo" style="display:none;">Salir de la demo</button>
+
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+</body>
+</html>

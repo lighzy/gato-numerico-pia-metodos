@@ -1,0 +1,44 @@
+GATO NUMERICO — ABRIR CON DOBLE CLIC
+===================================
+
+1. EXTRAER el ZIP. No ejecutes desde dentro del ZIP.
+
+WINDOWS
+- Instala Python 3.9 o superior: https://www.python.org/downloads/
+  En el instalador activa «Add Python to PATH».
+- Haz doble clic en Jugar.bat.
+- La primera vez se descarga Flask automáticamente (necesitas internet).
+- Se abre el juego en tu navegador. Mantén abierta la ventana negra.
+
+MAC
+- Instala Python 3.9 o superior: https://www.python.org/downloads/
+- Haz doble clic en Jugar.command.
+- Si macOS lo bloquea: clic derecho > Abrir (o revisa Privacidad y seguridad).
+- Si indica falta de permiso de ejecución, abre Terminal en esta carpeta y
+  ejecuta: chmod +x Jugar.command
+- La primera vez se descarga Flask automáticamente (necesitas internet).
+- El juego se abre en el navegador. No cierres la ventana de Terminal.
+
+CELULAR (iPhone o Android)
+Opcion A: usar el mismo Wi-Fi que la computadora.
+- Inicia el juego en Windows o Mac y deja esa computadora encendida.
+- Busca la IP local de la computadora: Windows: ipconfig;
+  Mac: Ajustes del sistema > Wi-Fi > Detalles > Direccion IP.
+- En el navegador del celular visita http://IP-DE-LA-COMPUTADORA:5000
+  Ejemplo: http://192.168.1.15:5000
+- Si no funciona, comprueba Wi-Fi y permisos del cortafuegos.
+
+Opcion B: acceder desde cualquier lugar, sin computadora encendida.
+- Publica el servidor Flask en un proveedor web (por ejemplo Render).
+- Sube esta carpeta a un repositorio GitHub.
+- Render > New > Blueprint > conecta repositorio y elige render.yaml.
+- Render te dara una URL https://... que abre el juego en cualquier navegador.
+- No es inmediato ni automatico: requiere configurar la cuenta y el despliegue.
+- El plan gratuito de Render, si esta disponible, puede dormirse por inactividad.
+
+IMPORTANTE
+- No existe un solo archivo que pueda abrirse por doble clic de igual forma
+  en Windows, Mac, iPhone y Android.
+- Windows/Mac requieren Python en esta version; el instalador NO instala Python.
+- En el celular se abre como PAGINA WEB, no como instalador nativo.
+- Los archivos .bat y .command estan preparados para sus sistemas respectivos.
